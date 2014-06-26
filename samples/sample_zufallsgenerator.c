@@ -1,35 +1,41 @@
-#include "pollinspiel.h"
+/**
+ * Diesen code direkt in main.c kopieren zum ausprobieren.
+ *
+ * Eine Art Würfel mit 4 möglichen Zufallszuständen.
+ */
 
-int main(void)
+uint8_t led = LED1;
+while(1)
 {
-	init();
+	// Warten bis der Button 5 gedrückt wird
+	int randnum = 0;
+	while(!getbutton(BUTTON5))
+		randnum++;
 
-	uint8_t led = LED1;
-	while(1)
+	// Falls schon ein Durchgang gemacht wurde, vorheriges Ergebnis löschen
+	setledByNum(led, LED_OFF);
+
+	// "Lichtball" mit zufälliger Geschwindigkeit (delay) einwerfen
+	led = LED1;
+	int delay = randnum % 200;
+
+	// "Lichtball" läuft herum bis er pro LED länger als 500ms braucht. Dabei wird er verlangsamt.
+	while(delay < 500)
 	{
-		int randnum = 0;
-		while(!getbutton(BUTTON5))
-		{
-			randnum++;
-		}
+		// Nächste LED anschalten
 		setledByNum(led, LED_OFF);
+		led++;
+		if (led > 4) led = 1;
+		setledByNum(led, LED_ON);
 
-		led = LED1;
-		int delay = randnum % 200;
-		while(delay < 500)
-		{
-			setledByNum(led, LED_OFF);
-			led++;
-			setledByNum(led, LED_ON);
+		// Ball verlangsamen und warten
+		delay += 10;
+		waitms(delay);
 
-			delay += 10;
-			if (led > 4) led = 1;
-			waitms(delay);
-		}
-
-		sound(1000, 500);
+		// "Knacken" abspielen
+		tbi(PORTD, BUZZER);
 	}
-	
 
-	done();
+	// Ergebnis eingeloggt, sound abspielen
+	sound(1000, 500);
 }

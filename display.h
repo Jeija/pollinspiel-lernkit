@@ -17,7 +17,7 @@ void WriteDisplayString(char *data);
 void ClearDisplay(void);
 void SleepDisplay(void);
 
-void SetDisplayCursor(uint8_t y, uint8_t x);
+void SetDisplayCursor(uint8_t x, uint8_t y);
 
  
 // Display Befehle

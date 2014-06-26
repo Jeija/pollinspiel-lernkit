@@ -4,9 +4,7 @@ int main(void)
 {
 	init();
 
-	/*
-		Hier kommt das Programm hin
-	*/
+	#include "main.c"
 
 	done();
 }

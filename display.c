@@ -167,11 +167,11 @@ void ClearDisplay(void)
                                   x           Spalte (0..8)
                       Return    : -
 --------------------------------------------------------------------------------------*/ 
-void SetDisplayCursor(unsigned char  y, unsigned char x)
+void SetDisplayCursor(unsigned char x, unsigned char y)
 {
     unsigned char tmp; 
 
-	if(y==1)
+    if(y==1)
 		tmp=0x80+0x00+x;     // 1. Zeile
     else 
 		tmp=0x80+0x40+x;     // 2. Zeile

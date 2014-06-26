@@ -2,14 +2,26 @@
 #include <util/delay.h>
 #include <stdlib.h>
 
+//#include "systimer.h"
 #include "display.h"
 #include "global.h"
 #include "util.h"
-//#include "systimer.h"
 
-char getbutton(char button)
+/*
+	Funktionen für main.c - Hardware steuern
+*/
+Button_state getbutton(Button_id button)
 {
-	return gbi(PIND, button);
+	// Hardware: Vom Platinenaufdruck = interne Bezeichnung auf das PORTD-bit umrechnen
+	uint8_t button_bit;
+	if (button == BUTTON1) button_bit = 0;
+	if (button == BUTTON2) button_bit = 1;
+	if (button == BUTTON3) button_bit = 3;
+	if (button == BUTTON4) button_bit = 4;
+	if (button == BUTTON5) button_bit = 2;
+
+	// Status des Tasters lesen
+	return gbi(PIND, button_bit);
 }
 
 void sound(int freq, int duration)
@@ -26,24 +38,49 @@ void sound(int freq, int duration)
 	cbi(PORTD, BUZZER);
 }
 
+void setled(LED_id led, LED_state state)
+{
+	// Hardware: Vom Platinenaufdruck = interne Bezeichnung auf das PORTD-bit umrechnen
+	uint8_t led_bit;
+	if (led == LED1) led_bit = 0;
+	if (led == LED2) led_bit = 1;
+	if (led == LED3) led_bit = 3;
+	if (led == LED4) led_bit = 4;
+
+	if (state)
+	{
+		sbi(LED_DDR,  led_bit);
+		sbi(LED_PORT, led_bit);
+	}
+	else
+	{
+		cbi(LED_DDR,  led_bit);
+		cbi(LED_PORT, led_bit);
+	}
+}
+
 void waitms(int ms)
 {
 	for (int i = 0; i <= ms; ++i)
 		_delay_ms(1);
 }
 
+/*
+	init() und done() Funktionen
+	Zu verwenden, wenn statt die main.c die pollinspiel.c - Datei für eigene Programme genutzt
+	werden (Fortgeschrittener Modus).
+*/
+
 void init(void)
 {
-	DDRD  |= ((1<<BUZZER) | (1<<DISPLAY_POWER));
-	DDRD  &= ~((1<<BUTTON1) | (1<<BUTTON2) | (1<<BUTTON3) | (1<<BUTTON4) | (1<<BUTTON5));
-
-	PORTD |=  (1<<DISPLAY_POWER);
-	PORTD &= ~((1<<BUTTON1) | (1<<BUTTON2) | (1<<BUTTON3) | (1<<BUTTON4) | (1<<BUTTON5));
-
-	DDRB  |=  (1<<DISPLAY_Vo);
-	PORTB |=  (1<<DISPLAY_Vo);
-
+	// LCD
+	sbi(DDRD, DISPLAY_POWER);
+	sbi(PORTD, DISPLAY_POWER);
+	sbi(DDRB, DISPLAY_Vo);
 	InitDisplay();
+
+	// Buzzer
+	sbi(DDRD, BUZZER);
 	//systimer_init();
 
 	sound(2000, 50);
@@ -54,30 +91,4 @@ void done(void)
 {
 	sound(500, 50);
 	while(1);
-}
-
-void setled(uint8_t LED, uint8_t state)
-{
-	if (state)
-	{
-		sbi(LED_DDR,  LED);
-		sbi(LED_PORT, LED);
-	}
-	else
-	{
-		cbi(LED_DDR,  LED);
-		cbi(LED_PORT, LED);
-	}
-}
-
-void setledByNum(uint8_t lednum, uint8_t state)
-{
-	uint8_t led;
-
-	if (lednum == 1) led = 0;
-	if (lednum == 2) led = 1;
-	if (lednum == 3) led = 3;
-	if (lednum == 4) led = 4;
-
-	setled(led, state);
 }
