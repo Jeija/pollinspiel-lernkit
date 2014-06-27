@@ -13,7 +13,7 @@ while(1)
 		randnum++;
 
 	// Falls schon ein Durchgang gemacht wurde, vorheriges Ergebnis löschen
-	setledByNum(led, LED_OFF);
+	setled(led, LED_OFF);
 
 	// "Lichtball" mit zufälliger Geschwindigkeit (delay) einwerfen
 	led = LED1;
@@ -23,10 +23,10 @@ while(1)
 	while(delay < 500)
 	{
 		// Nächste LED anschalten
-		setledByNum(led, LED_OFF);
+		setled(led, LED_OFF);
 		led++;
 		if (led > 4) led = 1;
-		setledByNum(led, LED_ON);
+		setled(led, LED_ON);
 
 		// Ball verlangsamen und warten
 		delay += 10;
