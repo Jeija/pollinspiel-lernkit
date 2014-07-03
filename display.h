@@ -16,8 +16,9 @@ void WriteDisplayData(unsigned char data);
 void WriteDisplayString(char *data);
 void ClearDisplay(void);
 void SleepDisplay(void);
-
 void SetDisplayCursor(uint8_t x, uint8_t y);
+void UploadCustomCharacter(uint8_t addr, uint8_t *data);
+void WriteCustomCharacter(uint8_t addr);
 
  
 // Display Befehle

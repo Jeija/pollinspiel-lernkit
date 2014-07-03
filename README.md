@@ -38,7 +38,13 @@ Im fortgeschrittenen Modus kann die pollinspiel.c als Hauptprogramm verwendet we
 	- Den Displayinhalt löschen
 * `void SetDisplayCursor(uint8_t x, uint8_t y);`
 	- Den Displaycursor für WriteDisplayString auf x (Zeichenreihe), y (Zeile) verschieben
-
+* `void UploadCustomCharacter(uint8_t addr, uint8_t *data)`
+	- Ein custom character an die Adresse "addr" (0-7) aufs LCD hochladen. Der Upload muss am Anfang des Programms vorgenommen werden!
+	- Das byte-array "data" beschreibt das aussehen des custom character. Ein guter Generator findet sich hierfür unter http://www.quinapalus.com/hd44780udg.html . Um Das dort erstellte Bild zu verwenden, muss der Code unter "In hex" in ein uint8_t-Array hineinkopiert werden.
+	- Siehe auch sample/sample_customcharacters.c
+* `WriteCustomCharacter(uint8_t addr)`
+	- Ein mit `UploadCustomCharacter` auf "addr" hochgeladenes Bild aufs Display schreiben.
+b
 ## Low-Level ##
 * `sbi(ADDR, BIT)`
 	- Das Bit mit der Nummer BIT im Byte ADDR setzen  (auf 1)

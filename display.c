@@ -181,7 +181,7 @@ void SetDisplayCursor(unsigned char x, unsigned char y)
  
 
 /* -------------------------------------------------------------------------------------
-   Funktion :   	  Diese Routine sendet einen String an das Dsipay  
+   Funktion :   	  Diese Routine sendet einen String an das Display  
    Parameterübergabe: Input     : *data       der zu sendende Text 
                       Return    : -
 --------------------------------------------------------------------------------------*/ 
@@ -218,4 +218,30 @@ void SleepDisplay(void)
 }
 
 
+// Ab hier: (c) Florian Euchner, Datum: 03.07.14
+/* -------------------------------------------------------------------------------------
+   Funktion: Diese Routine schreibt einen custom character in den CGRAM
+   Parameterübergabe: Input     : addr: Die Adresse des zu schreibenden custom character,
+					von 0-7
+				: data: 8 bytes, die das Aussehen des custom character
+					beschreiben (binary 1=on, binary 0=off)
+                      Return    : -
+--------------------------------------------------------------------------------------*/ 
+void UploadCustomCharacter(uint8_t addr, uint8_t *data)
+{
+	WriteDisplayControl(0x40 + addr*8);
+	for (uint8_t i = 0; i < 8; i++)
+		WriteDisplayData(data[i]);
+	WriteDisplayControl(0x02);
+}
 
+/* -------------------------------------------------------------------------------------
+   Funktion: Diese Routine lädt einen custom character aus dem CGRAM aufs LCD
+   Parameterübergabe: Input     : addr: Die Adresse des zu schreibenden custom character,
+					von 0-7
+                      Return    : -
+--------------------------------------------------------------------------------------*/ 
+void WriteCustomCharacter(uint8_t addr)
+{
+	WriteDisplayData(addr);
+}
